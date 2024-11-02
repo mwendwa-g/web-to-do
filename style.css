@@ -50,7 +50,7 @@ h1{
     caret-color: var(--accent-color);
 }
 #todo-input:focus{
-    outline: none;
+    outline-color: #3Ae;
 }
 form{
     position: relative;
