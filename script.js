@@ -1,78 +1,60 @@
-const todoForm = document.querySelector('form');
-const todoInput = document.getElementById('todo-input');
-const todoListUL = document.getElementById('todo-list');
+const navs = document.querySelectorAll('.nav-list li');
+const cube = document.querySelector('.box');
+const sections = document.querySelectorAll('.section');
 
-let allTodos = getTodos();
-updateTodolist();
+const resumeLists = document.querySelectorAll('.resume-list');
+const resumeBoxes = document.querySelectorAll('.resume-box');
 
-todoForm.addEventListener('submit', function(e){
-    e.preventDefault();
-    addTodo();
+const portfolioLists = document.querySelectorAll('.portfolio-list');
+const portfolioBoxes = document.querySelectorAll('.portfolio-box');
+
+//navbar actions and all selection actions along with cube rotation when navbar is clicked
+navs.forEach((nav, idx) => {
+    nav.addEventListener('click', () => {
+        document.querySelector('.nav-list li.active').classList.remove('active');
+        nav.classList.add('active');
+
+        cube.style.transform = `rotateY(${idx * -90}deg)`;
+
+        document.querySelector('.section.active').classList.remove('active');
+        sections[idx].classList.add('active');
+
+        const array = Array.from(sections);
+        const arrSecs = array.slice(1, -1); 
+        arrSecs.forEach(arrSec => {
+            if(arrSec.classList.contains('active')) {
+                sections[4].classList.add('action-contact')
+            }
+        });
+        if(sections[0].classList.contains('active')){
+            sections[4].classList.remove('action-contact')
+        }
+    });
 });
 
-function addTodo(){
-    const todoText = todoInput.value.trim();
-    if(todoText.length > 0){
-        const todoObject = {
-            text: todoText,
-            completed: false
-        }
-        allTodos.push(todoObject);
-        updateTodolist();
-        saveTodo()
-        todoInput.value = "";
-    }
-}
+//resume selection when clicking tab-list
+resumeLists.forEach((list, idx) => {
+    list.addEventListener('click', () => {
+        document.querySelector('.resume-list.active').classList.remove('active');
+        list.classList.add('active');
 
-function updateTodolist(){
-    todoListUL.innerHTML = "";
-    allTodos.forEach((todo, todoIndex)=>{
-        todoItem = createTodoItem(todo, todoIndex);
-        todoListUL.append(todoItem);
-    })
-}
-function createTodoItem(todo, todoIndex){
-    const todoId = "todo-"+todoIndex;
-    const todoLI = document.createElement("li")
-    const todoText = todo.text;
-    todoLI.className = 'todo';
-    todoLI.innerHTML = `
-    <input type="checkbox" id="${todoId}">
-                <label for="${todoId}" class="custom-checkbox">
-                    <i class="fa-solid fa-check"></i>
-                </label>
-                <label for="${todoId}" class="todo-text">
-                ${todoText}
-                </label>
-                <button class="delete-button">
-                    <i fill="var(--secondary-color)" class="fa-solid fa-minus"></i>
-                </button>
-    `;
-    const deleteButton = todoLI.querySelector(".delete-button");
-    deleteButton.addEventListener("click", ()=>{
-        deleteTodoItem(todoIndex)
-    })
-    const checkbox = todoLI.querySelector("input");
-    checkbox.addEventListener("change", ()=>{
-        allTodos[todoIndex].completed = checkbox.checked;
-        saveTodo()
-    })
-    checkbox.checked = todo.completed;
-    return todoLI;
-}
+        document.querySelector('.resume-box.active').classList.remove('active');
+        resumeBoxes[idx].classList.add('active');
+    });
+});
 
-function deleteTodoItem(todoIndex){
-    allTodos = allTodos.filter((_, i)=> i !== todoIndex);
-    saveTodo();
-    updateTodolist();
-};
-function saveTodo(){
-    const todosJson = JSON.stringify(allTodos);
-    localStorage.setItem("todos", todosJson)
-}
-saveTodo();
+//portfolio selection when clicking tab-list
+portfolioLists.forEach((list, idx) => {
+    list.addEventListener('click', () => {
+        document.querySelector('.portfolio-list.active').classList.remove('active');
+        list.classList.add('active');
 
-function getTodos(){
-    const todos = localStorage.getItem("todos") || "[]";
-    return JSON.parse(todos);
-}
+        document.querySelector('.portfolio-box.active').classList.remove('active');
+        portfolioBoxes[idx].classList.add('active');
+    });
+});
+
+//visibility for contact section
+setTimeout(() => {
+    sections[4].classList.remove('active');
+}, 1500)
